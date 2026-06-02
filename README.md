@@ -14,6 +14,26 @@ Repository ini berisi *source code* backend untuk aplikasi **Questify** (Proyek 
 
 ---
 
+## 🌟 Daftar Fitur & Alur User (User Journey)
+
+### 1. Autentikasi
+* User bisa mendaftar akun baru (Register).
+* User bisa login untuk mendapatkan token JWT yang digunakan sebagai akses ke fitur lainnya.
+
+### 2. Sistem Quest (Misi)
+* User bisa melihat daftar misi miliknya.
+* User bisa membuat misi baru.
+* User bisa mengedit misi (judul/rank), dengan syarat misi tersebut belum berstatus "completed".
+* User bisa menghapus misi.
+* User bisa menyelesaikan misi untuk mendapatkan EXP & Koin (memicu Level Up).
+
+### 3. Sistem Reward (Shop)
+* User bisa melihat daftar item reward di toko.
+* User bisa membuat, mengedit, dan menghapus item reward.
+* User bisa melakukan redeem (membeli) reward. Sistem akan otomatis memotong saldo koin, dan akan menolak (error 400) jika saldo koin tidak mencukupi.
+
+---
+
 ## ⚙️ Cara Setup di Komputer Lokal
 
 Ikuti langkah-langkah di bawah ini untuk menjalankan server API secara lokal agar bisa dihubungkan ke aplikasi Flutter.

@@ -74,3 +74,56 @@ def complete_quest(
     db.commit()
     db.refresh(quest)
     return quest
+
+
+@router.delete("/{quest_id}")
+def delete_quest(
+    quest_id: UUID,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
+    quest = db.query(Quest).filter(Quest.id == quest_id).first()
+
+    if not quest:
+        raise HTTPException(status_code=404, detail="Quest not found")
+
+    if quest.user_id != current_user.id:
+        raise HTTPException(
+            status_code=403, detail="Forbidden: You cannot delete someone else's quest"
+        )
+
+    db.delete(quest)
+    db.commit()
+
+    return {"detail": "Quest berhasil dihapus"}
+
+
+@router.put("/{quest_id}", response_model=QuestResponse)
+def update_quest(
+    quest_id: UUID,
+    quest_in: QuestCreate,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
+    quest = db.query(Quest).filter(Quest.id == quest_id).first()
+
+    if not quest:
+        raise HTTPException(status_code=404, detail="Quest not found")
+
+    if quest.user_id != current_user.id:
+        raise HTTPException(
+            status_code=403, detail="Forbidden: You cannot edit someone else's quest"
+        )
+
+    if quest.status == "completed":
+        raise HTTPException(
+            status_code=400, detail="Quest yang sudah selesai tidak dapat diedit"
+        )
+
+    # Lakukan Update Data
+    quest.title = quest_in.title
+    quest.rank = quest_in.rank
+
+    db.commit()
+    db.refresh(quest)
+    return quest

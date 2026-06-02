@@ -57,3 +57,49 @@ def redeem_reward(
         }
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))
+
+
+@router.put("/{reward_id}", response_model=RewardResponse)
+def update_reward(
+    reward_id: UUID,
+    reward_in: RewardCreate,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
+    reward = db.query(Reward).filter(Reward.id == reward_id).first()
+
+    if not reward:
+        raise HTTPException(status_code=404, detail="Reward not found")
+
+    # UNCOMMENT logika di bawah jika model Reward sudah diberi relasi user_id
+    # if reward.user_id != current_user.id:
+    #     raise HTTPException(status_code=403, detail="Forbidden: You cannot edit someone else's reward")
+
+    # Lakukan Update Data
+    reward.title = reward_in.title
+    reward.cost = reward_in.cost
+
+    db.commit()
+    db.refresh(reward)
+    return reward
+
+
+@router.delete("/{reward_id}")
+def delete_reward(
+    reward_id: UUID,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
+    reward = db.query(Reward).filter(Reward.id == reward_id).first()
+
+    if not reward:
+        raise HTTPException(status_code=404, detail="Reward not found")
+
+    # UNCOMMENT logika di bawah jika model Reward sudah diberi relasi user_id
+    # if reward.user_id != current_user.id:
+    #     raise HTTPException(status_code=403, detail="Forbidden: You cannot delete someone else's reward")
+
+    # Eksekusi Hapus
+    db.delete(reward)
+    db.commit()
+    return {"detail": "Reward berhasil dihapus"}
