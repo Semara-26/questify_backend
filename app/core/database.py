@@ -1,15 +1,15 @@
 import os
+
+from dotenv import load_dotenv
 from sqlalchemy import create_engine
 from sqlalchemy.orm import declarative_base, sessionmaker
-from dotenv import load_dotenv
 
 # Muat environment variables dari .env
 load_dotenv()
 
-# Gunakan localhost sebagai fallback jika tidak ada di env
-DATABASE_URL = os.getenv(
-    "DATABASE_URL", "postgresql://postgres:postgres@localhost:5432/questify_db"
-)
+DATABASE_URL = os.getenv("DATABASE_URL")
+if not DATABASE_URL:
+    raise ValueError("FATAL: DATABASE_URL environment variable is not set!")
 
 # Konfigurasi parameter engine agar ramah memori (RAM < 512MB)
 engine = create_engine(
