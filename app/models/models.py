@@ -18,6 +18,8 @@ class User(Base):
     level = Column(Integer, default=1)
     exp = Column(Integer, default=0)
     coins = Column(Integer, default=0)
+    daily_streak = Column(Integer, default=0)
+    last_login_date = Column(DateTime, nullable=True)
     created_at = Column(DateTime, default=lambda: datetime.now(timezone.utc))
 
     # Relasi One-to-Many

@@ -1,3 +1,5 @@
+from datetime import datetime, timezone
+
 from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
@@ -41,6 +43,19 @@ def login(
             detail="Incorrect email or password",
             headers={"WWW-Authenticate": "Bearer"},
         )
+
+    now = datetime.now(timezone.utc)
+    if user.last_login_date:
+        delta = now.date() - user.last_login_date.date()
+        if delta.days == 1:
+            user.daily_streak += 1
+        elif delta.days > 1:
+            user.daily_streak = 1
+    else:
+        user.daily_streak = 1
+
+    user.last_login_date = now
+    db.commit()
 
     access_token = create_access_token(data={"sub": user.email})
     return {"access_token": access_token, "token_type": "bearer"}

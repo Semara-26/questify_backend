@@ -25,6 +25,7 @@ class UserResponse(BaseModel):
     level: int
     exp: int
     coins: int
+    daily_streak: int
     created_at: datetime
 
     model_config = ConfigDict(from_attributes=True)
