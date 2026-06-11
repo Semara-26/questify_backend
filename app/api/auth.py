@@ -21,7 +21,9 @@ def register(user_in: UserCreate, db: Session = Depends(get_db)):
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))
 
-    db_user = User(email=user_in.email, password=hashed_password)
+    db_user = User(
+        username=user_in.username, email=user_in.email, password=hashed_password
+    )
     db.add(db_user)
     db.commit()
     db.refresh(db_user)

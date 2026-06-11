@@ -13,12 +13,14 @@ class Token(BaseModel):
 
 # --- User Schemas ---
 class UserCreate(BaseModel):
+    username: str = Field(..., min_length=3, description="Nama tampilan user")
     email: EmailStr
     password: str
 
 
 class UserResponse(BaseModel):
     id: UUID
+    username: str
     email: EmailStr
     level: int
     exp: int

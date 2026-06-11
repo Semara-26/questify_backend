@@ -13,6 +13,7 @@ class User(Base):
 
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     email = Column(String, unique=True, index=True, nullable=False)
+    username = Column(String, nullable=False, default="Player")
     password = Column(String, nullable=False)
     level = Column(Integer, default=1)
     exp = Column(Integer, default=0)
